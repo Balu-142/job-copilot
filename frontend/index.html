@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobCopilot Pro - AI Multi-Platform Job Application Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">Balu-JobCopilot <span class="badge-pro">PRO</span></span>
+          <span class="brand-subtitle">Automated Multi-Platform Job Hunter &amp; Application Suite</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="user-pill">
+          <div class="user-avatar">BP</div>
+          <div class="user-info">
+            <span class="user-name">Bala Gurunadham Pamba</span>
+            <span class="user-role">Senior Flutter Developer (3+ Yrs)</span>
+          </div>
+        </div>
+        <a href="/api/resume/download" class="btn btn-outline" id="btnDownloadResume">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Download PDF Resume
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- Top Hero Banner / Resume Status Card -->
+    <section class="hero-card">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="live-pulse-badge">
+            <span class="pulse-dot"></span> ATS-Optimized PDF Resume Ready
+          </div>
+          <h1>Multi-Platform Automated Job Hunter</h1>
+          <p class="hero-desc">
+            Matches and prepares applications for <strong>Flutter Developer</strong> roles across <strong>LinkedIn,
+              Naukri, Indeed, Instahyre, RemoteOK &amp; Wellfound</strong>. With built-in <strong>Permission
+              Gates</strong>, every submission is verified by you before dispatch.
+          </p>
+        </div>
+
+        <div class="resume-quick-card">
+          <div class="rq-header">
+            <span class="rq-title">Active Candidate Profile</span>
+            <span class="status-chip chip-ready">PDF Compiled</span>
+          </div>
+          <div class="rq-details">
+            <div class="rq-row"><span>Target Roles:</span> <strong>Senior Flutter / Mobile Lead</strong></div>
+            <div class="rq-row"><span>Locations:</span> <strong>Hyderabad, Bengaluru, Remote</strong></div>
+            <div class="rq-row"><span>Notice Period:</span> <strong>Immediate / 15 Days</strong></div>
+            <div class="rq-row"><span>Desktop Copy:</span> <code
+                class="file-code">Desktop\AGI_AI\Bala_Gurunadham_Pamba_Resume.pdf</code></div>
+          </div>
+          <div class="rq-actions">
+            <a href="/api/resume/view" target="_blank" class="btn btn-sm btn-ghost">
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              View PDF
+            </a>
+            <a href="/api/resume/download" class="btn btn-sm btn-primary">
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Save PDF
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <span class="stat-number" id="statTotalJobs">0</span>
+          <span class="stat-label">Total Matches</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number highlight-blue" id="statTotalPosts">0</span>
+          <span class="stat-label">📢 Recruiter Hiring Posts</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number highlight-gold" id="statHighMatch">0</span>
+          <span class="stat-label">90%+ Prime Fits</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number" id="statAvgMatch">0%</span>
+          <span class="stat-label">Average ATS Match</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number highlight-green" id="statApplied">0</span>
+          <span class="stat-label">Approved &amp; Applied</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs & Live Auto-Scanner Status -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" id="tabAllBtn" onclick="switchFeedTab('ALL')">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        All Matches (<span id="totalMatchesCount">0</span>)
+      </button>
+      <button class="tab-btn" id="tabJobsBtn" onclick="switchFeedTab('JOB_LISTING')">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        💼 Job Openings (<span id="jobsCountBadge">0</span>)
+      </button>
+      <button class="tab-btn" id="tabPostsBtn" onclick="switchFeedTab('HIRING_POST')">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        📢 Recruiter Hiring Posts (<span id="postsCountBadge">0</span>)
+      </button>
+      <button class="tab-btn" id="tabAppliedBtn" onclick="switchTab('applied')">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Application Tracker (<span id="appliedCountBadge">0</span>)
+      </button>
+
+      <div class="auto-scan-status-pill" id="autoScanPill" onclick="toggleAutoScan()"
+        title="Click to toggle automatic background scanning">
+        <span class="radar-dot" id="radarDot"></span>
+        <span id="autoScanLabel">Auto-Scanner: <strong>LIVE</strong> (<span id="scanCountdown">45</span>s)</span>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JOBS VIEW -->
+    <div id="jobsView" class="view-panel active">
+      <!-- Filter Controls Bar -->
+      <div class="filters-card">
+        <div class="filter-group-main">
+          <!-- Search Input -->
+          <div class="search-input-wrap">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="searchInput"
+              placeholder="Search by role, company, recruiter, or skill (e.g. MQTT, POS, GetX)..."
+              oninput="applyFilters()">
+          </div>
+
+          <!-- Recency / Date Posted Filter -->
+          <select id="recencySelect" class="filter-select highlight-select" onchange="applyFilters()"
+            title="Filter by date posted">
+            <option value="30" selected>📆 Past 30 Days (All Month)</option>
+            <option value="1">⚡ Past 24 Hours (Fresh / Today)</option>
+            <option value="3">🔥 Past 3 Days</option>
+            <option value="7">✨ Past 7 Days (Past Week)</option>
+            <option value="14">🗓️ Past 14 Days (2 Weeks)</option>
+            <option value="ALL">📅 Date: All Dates</option>
+          </select>
+
+          <!-- Salary Package Filter (Starts at 6.5 LPA and Up) -->
+          <select id="salarySelect" class="filter-select highlight-select" onchange="applyFilters()"
+            title="Filter by Minimum Salary Package">
+            <option value="0">💰 Salary: All (₹6.5+ LPA)</option>
+            <option value="8.5">💰 Salary: ₹8.5+ LPA</option>
+            <option value="12">💰 Salary: ₹12.0+ LPA</option>
+            <option value="15">💰 Salary: ₹15.0+ LPA</option>
+            <option value="18">💰 Salary: ₹18.0+ LPA (Lead / Staff)</option>
+          </select>
+
+          <!-- Work Model Filter -->
+          <select id="workModelSelect" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">🏢 All Work Models</option>
+            <option value="Remote">🌐 Remote Only</option>
+            <option value="Hybrid">🔄 Hybrid</option>
+            <option value="On-site">📍 On-site</option>
+          </select>
+
+          <!-- Platform Filter -->
+          <select id="platformSelect" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">🌐 All 8+ Platforms</option>
+            <option value="LinkedIn">LinkedIn (Job Listings)</option>
+            <option value="LinkedIn Post">LinkedIn Recruiter Posts</option>
+            <option value="Naukri">Naukri</option>
+            <option value="Indeed">Indeed</option>
+            <option value="Instahyre">Instahyre</option>
+            <option value="Wellfound">Wellfound (AngelList)</option>
+            <option value="Foundit">Foundit (Monster)</option>
+            <option value="RemoteOK">RemoteOK</option>
+            <option value="Remotive">Remotive</option>
+          </select>
+
+          <!-- Location Filter -->
+          <select id="locationSelect" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">📍 All Locations</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Remote">Remote</option>
+            <option value="Pune">Pune</option>
+          </select>
+
+          <!-- Match Score Filter -->
+          <select id="matchScoreSelect" class="filter-select" onchange="applyFilters()">
+            <option value="0">🎯 All Match Scores</option>
+            <option value="90">90%+ Match (Prime)</option>
+            <option value="80">80%+ Match (Strong)</option>
+            <option value="70">70%+ Match</option>
+          </select>
+
+          <!-- Sort Order -->
+          <select id="sortSelect" class="filter-select" onchange="applyFilters()">
+            <option value="newest">⚡ Sort: Freshest / Newest First</option>
+            <option value="salary">💰 Sort: Highest Salary Package</option>
+            <option value="match">🎯 Sort: Highest ATS Match %</option>
+          </select>
+        </div>
+
+        <div class="filter-group-actions">
+          <button class="btn btn-batch" onclick="openBatchApprovalModal()">
+            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Approve &amp; Apply Batch
+          </button>
+          <button class="btn btn-ghost" onclick="refreshJobs()">
+            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh Feed
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="resetFilters()">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Jobs Grid Container -->
+      <div id="jobsGrid" class="jobs-grid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Scanning active positions across LinkedIn, Naukri, Indeed, and RemoteOK...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACKER VIEW -->
+    <div id="appliedView" class="view-panel">
+      <div class="tracker-card">
+        <div class="tracker-header">
+          <div>
+            <h2>Application Log &amp; Permission Trail</h2>
+            <p class="tracker-sub">Full audit log of jobs approved with candidate permission, auto-filled responses, and
+              application links.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="fetchApplicationHistory()">
+            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh Log
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Job Title &amp; Company</th>
+                <th>Platform</th>
+                <th>Location</th>
+                <th>Applied Timestamp</th>
+                <th>Permission Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="trackerTableBody">
+              <tr>
+                <td colspan="6" class="text-center text-muted">No applications recorded yet. Review matches and grant
+                  permission to apply.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PERMISSION & APPLICATION MODAL -->
+  <div id="permissionModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="security-badge">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Permission Required
+          </div>
+          <h3 id="modalJobTitle">Senior Flutter Developer</h3>
+          <span class="modal-company" id="modalCompany">Company Name</span>
+        </div>
+        <button class="modal-close" onclick="closePermissionModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="permission-alert">
+          <strong>Review &amp; Confirmation:</strong> As requested, your explicit authorization is required before this
+          application package is processed. Review the pre-filled screener data and tailored note below.
+        </div>
+
+        <div class="modal-section-title">Candidate Screener Package</div>
+        <div class="screener-grid">
+          <div class="screener-item">
+            <label>Applicant Name:</label>
+            <input type="text" id="mApplicantName" value="Bala Gurunadham Pamba" readonly>
+          </div>
+          <div class="screener-item">
+            <label>Email Address:</label>
+            <input type="text" id="mEmail" value="balupamba1@gmail.com" readonly>
+          </div>
+          <div class="screener-item">
+            <label>Phone Number:</label>
+            <input type="text" id="mPhone" value="+91 6302125421" readonly>
+          </div>
+          <div class="screener-item">
+            <label>Total Flutter Experience:</label>
+            <input type="text" id="mExp" value="3+ Years (Production)" readonly>
+          </div>
+          <div class="screener-item">
+            <label>Notice Period:</label>
+            <input type="text" id="mNotice" value="Immediate / 15 Days (Negotiable)">
+          </div>
+          <div class="screener-item">
+            <label>Expected CTC:</label>
+            <input type="text" id="mExpectedCTC" value="₹14 - ₹18 LPA">
+          </div>
+          <div class="screener-item full-width">
+            <label>Attached Document:</label>
+            <div class="attached-file-pill">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <span>Bala_Gurunadham_Pamba_Resume.pdf (378 KB • ATS Optimized)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-section-title" style="margin-top: 14px;">Tailored Introduction &amp; Highlights</div>
+        <textarea id="mCoverLetter" class="cover-letter-box" rows="5"></textarea>
+      </div>
+
+      <div class="modal-footer" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <a id="modalDirectJobLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="margin-right:auto;">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Open Listing ↗
+        </a>
+        <button class="btn btn-ghost" onclick="closePermissionModal()">Cancel / Skip</button>
+        <button class="btn btn-primary" id="btnConfirmPermission" onclick="executePermissionAndApply()">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Grant Permission &amp; Apply
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BATCH APPROVAL MODAL -->
+  <div id="batchModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="security-badge">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Batch Application Permission
+          </div>
+          <h3>Confirm Batch Application</h3>
+          <span class="modal-company">Apply to multiple high-matching Flutter positions simultaneously</span>
+        </div>
+        <button class="modal-close" onclick="closeBatchModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="permission-alert">
+          You are about to authorize applications to <strong id="batchJobCount">0</strong> selected high-match jobs.
+          Each application will carry your updated PDF resume and verified candidate screener details.
+        </div>
+
+        <div class="batch-list-box" id="batchListItems">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeBatchModal()">Cancel</button>
+        <button class="btn btn-batch" onclick="executeBatchApply()">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Authorize &amp; Apply to All Selected
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

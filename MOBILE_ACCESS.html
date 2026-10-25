@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobCopilot Pro - Mobile Device Connect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #111827;
+      --border: rgba(255, 255, 255, 0.1);
+      --primary: #3b82f6;
+      --green: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.sub {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      margin-bottom: 24px;
+    }
+    .qr-frame {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 16px;
+      display: inline-block;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+    }
+    .qr-frame img {
+      display: block;
+      width: 240px;
+      height: 240px;
+      border-radius: 8px;
+    }
+    .link-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .link-title {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .link-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #38bdf8;
+      word-break: break-all;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    .btn-outline:hover { background: rgba(255, 255, 255, 0.05); }
+    .tips {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .tips strong { color: #f1f5f9; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge"><span class="dot"></span> GLOBAL LIVE SERVICE ACTIVE</div>
+    <h1>Open on Phone / Other Device</h1>
+    <p class="sub">Point your phone's camera at the QR code below to open JobCopilot instantly without typing any URL.</p>
+
+    <div class="qr-frame">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=10&data=https%3A%2F%2Fremembered-store-individuals-buys.trycloudflare.com" alt="JobCopilot Mobile Access QR Code">
+    </div>
+
+    <div class="link-box">
+      <div class="link-title">🌐 Worldwide Public HTTPS URL:</div>
+      <div class="link-val">https://remembered-store-individuals-buys.trycloudflare.com</div>
+    </div>
+
+    <div class="btn-row">
+      <a href="https://remembered-store-individuals-buys.trycloudflare.com" target="_blank" class="btn btn-primary">Open Directly</a>
+      <button onclick="navigator.clipboard.writeText('https://remembered-store-individuals-buys.trycloudflare.com'); alert('URL copied to clipboard! Paste it on WhatsApp, Slack, or any browser.');" class="btn btn-outline">Copy Link</button>
+    </div>
+
+    <div class="tips">
+      <strong>📱 How to open on other devices:</strong><br>
+      • <strong>Any Phone/Tablet (4G/5G/Wi-Fi):</strong> Open your Camera app and scan the QR code above.<br>
+      • <strong>Local Wi-Fi Address:</strong> <code style="color:#34d399">http://192.168.1.26:3500</code><br>
+      • <strong>Status:</strong> Powered by Cloudflare HTTP/2 Secure Edge.
+    </div>
+  </div>
+</body>
+</html>
