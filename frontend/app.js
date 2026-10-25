@@ -490,7 +490,7 @@ function renderJobs(jobs) {
               Review &amp; Apply
             </button>
             ${job.dmRecruiterUrl ? `
-              <a href="${job.dmRecruiterUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" title="Search &amp; Message Recruiters at ${escapeHtml(job.company)}">
+              <a href="${job.dmRecruiterUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" title="Direct Message Recruiter for ${escapeHtml(job.company)} on LinkedIn">
                 <svg class="btn-icon" fill="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.5 1.5 0 1 0-.01-3.01 1.5 1.5 0 0 0 .01 3.01m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
                 DM Recruiter
               </a>
@@ -552,16 +552,97 @@ function updateStats() {
   updateBadges();
 }
 
-// OPEN PERMISSION & AUTHORIZATION MODAL
+// Client-side Fallback Application Payload Generator (guarantees modal never crashes on cold start)
+function buildClientApplicationPayload(job) {
+  const isPost = job.type === 'HIRING_POST';
+  const recruiterName = job.author?.name || 'Hiring Lead';
+
+  const coverSnippet = isPost
+    ? `Dear ${recruiterName},
+
+I saw your hiring post regarding the ${job.title} role at ${job.company} and wanted to reach out directly.
+
+With 3+ years of commercial production experience in Flutter & Dart, I have built and scaled enterprise mobile solutions including:
+• Full Retail & POS ecosystems with sub-second MQTT synchronization
+• Resilient Offline-first local databases (SQLite, Isar, Hive)
+• Payment Gateways (Razorpay, Cashfree, Payroc, UPI, Tap to Pay) & Android POS hardware
+• Google Maps background GPS tracking & 10+ Play Store published apps
+
+I am available for an immediate start (notice period: 15 days or negotiable) and would welcome the opportunity to discuss how my hands-on mobile experience matches your team's goals. My PDF resume is attached.
+
+Best regards,
+Bala Gurunadham Pamba
+Phone: +91 6302125421 | Email: balupamba1@gmail.com
+LinkedIn: https://linkedin.com/in/balu142`
+    : `Dear Hiring Team at ${job.company},
+
+I am writing to express my strong interest in the ${job.title} position. With over 3 years of commercial production experience in Flutter & Dart, I have architected large-scale enterprise mobile applications including full-scale Retail & Restaurant POS ecosystems with sub-second MQTT real-time synchronization, offline-first architectures (SQLite, Isar, Hive), and diverse hardware & payment gateway integrations (Razorpay, Cashfree, Payroc, Tap to Pay).
+
+Having successfully engineered and published 10+ applications to the Google Play Store, I am confident in my ability to immediately add value to your team at ${job.company}.
+
+Sincerely,
+Bala Gurunadham Pamba
+Hyderabad, India | +91 6302125421 | balupamba1@gmail.com`;
+
+  return {
+    jobId: job.id,
+    type: job.type || 'JOB_LISTING',
+    jobTitle: job.title || 'Senior Flutter Developer',
+    company: job.company || 'Enterprise Technology Partner',
+    platform: job.platform || 'Direct',
+    applyUrl: job.applyUrl || '#',
+    salary: job.salary || '₹14,00,000 - ₹22,00,000 INR (14 - 22 LPA)',
+    recruiterEmail: job.recruiterEmail || null,
+    author: job.author || null,
+    candidate: {
+      name: 'Bala Gurunadham Pamba',
+      email: 'balupamba1@gmail.com',
+      phone: '+91 6302125421',
+      location: 'Hyderabad, Telangana, India',
+      linkedIn: 'https://linkedin.com/in/balu142',
+      experienceYears: '3+ Years',
+      noticePeriod: 'Immediate / 15 Days',
+      expectedCTC: '₹14,00,000 - ₹22,00,000 INR (14 - 22 LPA)',
+      resumeAttached: 'Bala_Gurunadham_Pamba_Resume.pdf'
+    },
+    tailoredCoverLetter: coverSnippet,
+    permissionRequired: true
+  };
+}
+
+// OPEN PERMISSION & AUTHORIZATION MODAL (Resilient to cold starts & network blips)
 async function openPermissionModal(jobId) {
   try {
-    const res = await fetch('/api/applications/request-permission', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId })
-    });
-    const data = await res.json();
-    currentJobPayload = data.payload;
+    const localJob = (window.allJobs || allJobs || []).find(j => j.id === jobId) || 
+                     (filteredJobs || []).find(j => j.id === jobId);
+
+    let payload = null;
+
+    try {
+      const res = await fetch('/api/applications/request-permission', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId, job: localJob })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.payload) {
+          payload = data.payload;
+        }
+      }
+    } catch (netErr) {
+      console.warn('Backend permission fetch failed, utilizing client generator:', netErr);
+    }
+
+    if (!payload) {
+      if (localJob) {
+        payload = buildClientApplicationPayload(localJob);
+      } else {
+        payload = buildClientApplicationPayload({ id: jobId, title: 'Senior Flutter Developer', company: 'Tech Partner' });
+      }
+    }
+
+    currentJobPayload = payload;
 
     const isPost = currentJobPayload.type === 'HIRING_POST';
     const securityBadge = document.querySelector('#permissionModal .security-badge');
@@ -614,7 +695,8 @@ async function openPermissionModal(jobId) {
     document.getElementById('mCoverLetter').value = currentJobPayload.tailoredCoverLetter;
     document.getElementById('permissionModal').classList.add('open');
   } catch (err) {
-    alert('Failed to prepare permission payload: ' + err.message);
+    console.error('Error opening permission modal:', err);
+    showToast('Notice', 'Unable to open application preview: ' + err.message);
   }
 }
 
@@ -646,6 +728,7 @@ async function executePermissionAndApply() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         jobId: currentJobPayload.jobId,
+        job: currentJobPayload,
         customNotes,
         confirmedBy: 'User (Explicit Confirmation)',
         noticePeriod: noticeVal,

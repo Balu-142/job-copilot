@@ -190,20 +190,48 @@ app.get('/api/jobs', async (req, res) => {
 });
 
 // Route: Request Permission & Prepare Application Preview
-app.post('/api/applications/request-permission', (req, res) => {
-  const { jobId } = req.body;
-  const job = cachedJobs.find(j => j.id === jobId);
+app.post('/api/applications/request-permission', async (req, res) => {
+  try {
+    const { jobId, job: passedJob } = req.body;
+    let job = cachedJobs.find(j => j.id === jobId);
 
-  if (!job) {
-    return res.status(404).json({ error: 'Job not found' });
-  }
+    if (!job && passedJob) {
+      job = passedJob;
+      cachedJobs.push(passedJob);
+    }
 
-  // Generate personalized cover snippet (tailored for recruiter posts or job board listings)
-  const isPost = job.type === 'HIRING_POST';
-  const recruiterName = job.author?.name || 'Hiring Team';
+    if (!job && cachedJobs.length === 0) {
+      try {
+        const enriched = await getAllAggregatedJobs();
+        cachedJobs = enriched;
+        job = cachedJobs.find(j => j.id === jobId);
+      } catch (e) {
+        console.warn('Auto-reload of cachedJobs failed:', e.message);
+      }
+    }
 
-  const coverSnippet = isPost
-    ? `Dear ${recruiterName},
+    if (!job) {
+      // Create resilient fallback job object using client metadata so the modal is never blocked
+      job = {
+        id: jobId || `job-${Date.now()}`,
+        title: req.body.jobTitle || passedJob?.title || 'Senior Flutter Developer',
+        company: req.body.company || passedJob?.company || 'Enterprise Partner',
+        platform: req.body.platform || passedJob?.platform || 'Direct Listing',
+        applyUrl: req.body.applyUrl || passedJob?.applyUrl || '#',
+        salary: req.body.salary || passedJob?.salary || '₹14,00,000 - ₹22,00,000 INR (14 - 22 LPA)',
+        type: req.body.type || passedJob?.type || 'JOB_LISTING',
+        recruiterEmail: req.body.recruiterEmail || passedJob?.recruiterEmail || null,
+        author: passedJob?.author || null
+      };
+      cachedJobs.push(job);
+    }
+
+    // Generate personalized cover snippet (tailored for recruiter posts or job board listings)
+    const isPost = job.type === 'HIRING_POST';
+    const recruiterName = job.author?.name || 'Hiring Team';
+
+    const coverSnippet = isPost
+      ? `Dear ${recruiterName},
 
 I saw your hiring post regarding the ${job.title} role at ${job.company} and wanted to reach out directly.
 
@@ -219,7 +247,7 @@ Best regards,
 Bala Gurunadham Pamba
 Phone: +91 6302125421 | Email: balupamba1@gmail.com
 LinkedIn: https://linkedin.com/in/balu142`
-    : `Dear Hiring Team at ${job.company},
+      : `Dear Hiring Team at ${job.company},
 
 I am writing to express my strong interest in the ${job.title} position. With over 3 years of commercial production experience in Flutter & Dart, I have architected large-scale enterprise mobile applications including full-scale Retail & Restaurant POS ecosystems with sub-second MQTT real-time synchronization, offline-first architectures (SQLite, Isar, Hive), and diverse hardware & payment gateway integrations (Razorpay, Cashfree, Payroc, Tap to Pay).
 
@@ -229,44 +257,61 @@ Sincerely,
 Bala Gurunadham Pamba
 Hyderabad, India | +91 6302125421 | balupamba1@gmail.com`;
 
-  const applicationPayload = {
-    jobId: job.id,
-    type: job.type || 'JOB_LISTING',
-    jobTitle: job.title,
-    company: job.company,
-    platform: job.platform,
-    applyUrl: job.applyUrl,
-    salary: job.salary || '₹14,00,000 - ₹22,00,000 INR',
-    recruiterEmail: job.recruiterEmail || null,
-    author: job.author || null,
-    candidate: {
-      name: CANDIDATE_PROFILE.fullName,
-      email: CANDIDATE_PROFILE.email,
-      phone: CANDIDATE_PROFILE.phone,
-      location: CANDIDATE_PROFILE.location,
-      linkedIn: CANDIDATE_PROFILE.linkedIn,
-      experienceYears: '3+ Years',
-      noticePeriod: CANDIDATE_PROFILE.noticePeriod,
-      expectedCTC: CANDIDATE_PROFILE.expectedCTC,
-      resumeAttached: 'Bala_Gurunadham_Pamba_Resume.pdf'
-    },
-    tailoredCoverLetter: coverSnippet,
-    permissionRequired: true,
-    message: isPost
-      ? `Verify details to dispatch direct email application to ${recruiterName} (${job.recruiterEmail}).`
-      : 'User permission is required before submitting this application.'
-  };
+    const applicationPayload = {
+      jobId: job.id,
+      type: job.type || 'JOB_LISTING',
+      jobTitle: job.title,
+      company: job.company,
+      platform: job.platform,
+      applyUrl: job.applyUrl,
+      salary: job.salary || '₹14,00,000 - ₹22,00,000 INR',
+      recruiterEmail: job.recruiterEmail || null,
+      author: job.author || null,
+      candidate: {
+        name: CANDIDATE_PROFILE.fullName,
+        email: CANDIDATE_PROFILE.email,
+        phone: CANDIDATE_PROFILE.phone,
+        location: CANDIDATE_PROFILE.location,
+        linkedIn: CANDIDATE_PROFILE.linkedIn,
+        experienceYears: '3+ Years',
+        noticePeriod: CANDIDATE_PROFILE.noticePeriod,
+        expectedCTC: CANDIDATE_PROFILE.expectedCTC,
+        resumeAttached: 'Bala_Gurunadham_Pamba_Resume.pdf'
+      },
+      tailoredCoverLetter: coverSnippet,
+      permissionRequired: true,
+      message: isPost
+        ? `Verify details to dispatch direct email application to ${recruiterName} (${job.recruiterEmail}).`
+        : 'User permission is required before submitting this application.'
+    };
 
-  res.json({ payload: applicationPayload });
+    res.json({ payload: applicationPayload });
+  } catch (err) {
+    console.error('Error in /api/applications/request-permission:', err);
+    res.status(500).json({ error: 'Failed to prepare permission payload', message: err.message });
+  }
 });
 
 // Route: Confirm Permission and Execute Application
 app.post('/api/applications/confirm-and-apply', (req, res) => {
-  const { jobId, customNotes, confirmedBy } = req.body;
-  const job = cachedJobs.find(j => j.id === jobId);
+  const { jobId, customNotes, confirmedBy, job: passedJob } = req.body;
+  let job = cachedJobs.find(j => j.id === jobId);
+
+  if (!job && passedJob) {
+    job = passedJob;
+    cachedJobs.push(passedJob);
+  }
 
   if (!job) {
-    return res.status(404).json({ error: 'Job not found' });
+    job = {
+      id: jobId || `job-${Date.now()}`,
+      title: req.body.jobTitle || 'Senior Flutter Developer',
+      company: req.body.company || 'Enterprise Partner',
+      platform: req.body.platform || 'Direct',
+      applyUrl: req.body.applyUrl || '#',
+      location: 'Hyderabad / Bengaluru'
+    };
+    cachedJobs.push(job);
   }
 
   const existingIndex = applications.findIndex(a => a.jobId === jobId);
