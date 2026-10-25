@@ -42,6 +42,14 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use('/resume-files', express.static(path.join(__dirname, '..', 'resume')));
 
+// Explicit root route & health check
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Candidate Profile Definition
 const CANDIDATE_PROFILE = {
   fullName: 'Bala Gurunadham Pamba',
